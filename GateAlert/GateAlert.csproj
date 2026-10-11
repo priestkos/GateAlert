@@ -1,0 +1,21 @@
+<Project Sdk="Dalamud.NET.Sdk/15.0.0">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Version>1.0.0.0</Version>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <OutputType>Library</OutputType>
+    <AssemblyName>GateAlert</AssemblyName>
+    <RootNamespace>GateAlert</RootNamespace>
+
+    <Author>saijm</Author>
+    <Authors>saijm</Authors>
+    <Name>Gate Alert</Name>
+    <Punchline>Yells at you the moment your GATE opens in the Gold Saucer.</Punchline>
+    <Description>Watches the Gold Saucer Attendant's announcements and prints a loud chat line when a GATE you care about goes live. Pick one GATE, several, or every GATE in the saucer.</Description>
+    <PackageTags>goldsaucer;gate;mgp;alert;notification</PackageTags>
+    <RepoUrl>https://github.com/saijm/GateAlert</RepoUrl>
+  </PropertyGroup>
+
+</Project>
