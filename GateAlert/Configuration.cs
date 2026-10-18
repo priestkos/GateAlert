@@ -41,6 +41,20 @@ public sealed class Configuration : IPluginConfiguration
     /// <summary>UIColor palette key for the alert accent (60 = the yellow Dalamud's own sample uses).</summary>
     public ushort AccentColorKey { get; set; } = 60;
 
+    /// <summary>Clamp and sanitize values after load or before save.</summary>
+    public void Sanitize()
+    {
+        RepeatCount = Math.Clamp(RepeatCount, 1, 10);
+        RepeatIntervalSeconds = Math.Clamp(RepeatIntervalSeconds, 5, 600);
+        CustomGates ??= string.Empty;
+        SelectedGates ??= [];
+        SelectedGates = SelectedGates
+            .Where(g => !string.IsNullOrWhiteSpace(g))
+            .Select(g => g.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
     public GateWatchSettings ToSettings(uint territoryType) =>
         new(Enabled, OnlyInGoldSaucer, territoryType, AllGates, SelectedGates, CustomGates);
 
@@ -50,7 +64,7 @@ public sealed class Configuration : IPluginConfiguration
     public void SetSelected(string gateName, bool selected)
     {
         SelectedGates.RemoveAll(g => string.Equals(g, gateName, StringComparison.OrdinalIgnoreCase));
-        if (selected)
-            SelectedGates.Add(gateName);
+        if (selected && !string.IsNullOrWhiteSpace(gateName))
+            SelectedGates.Add(gateName.Trim());
     }
 }

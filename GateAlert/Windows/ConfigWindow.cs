@@ -287,7 +287,7 @@ public sealed class ConfigWindow : Window, IDisposable
 
         foreach (var entry in this.watcher.History.Take(5))
         {
-            var when = entry.At.ToString("HH:mm:ss");
+            var when = entry.At.ToLocalTime().ToString("HH:mm:ss");
             ImGui.TextColored(entry.WasTest ? Muted : Gold, $"{when}  {entry.GateName}");
             ImGui.SameLine();
             ImGui.TextColored(Muted, entry.WasTest ? "(test)" : entry.Location);
