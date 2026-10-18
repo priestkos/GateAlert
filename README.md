@@ -13,11 +13,12 @@ The Gold Saucer Attendant announces each GATE in chat, roughly:
 
 > A limited-time event “Cliffhanger” is now underway in the Event Square.
 
-`GateAlert.Core.GateAnnouncementParser` reads that line: it pulls the quoted GATE name out, takes the
-location from the tail ("in …"), and accepts the line only when it looks like an announcement
-(a marker phrase such as *limited-time event* / *is now underway*) **or** when the attendant sent it
-and the name is a GATE the plugin knows about. Other attendant small talk — “Prize Claim” counters,
-the GATE Keeper — is ignored.
+`GateAlert.Core.GateAnnouncementParser` reads that line: it requires the sender to be exactly the
+Gold Saucer Attendant (case-insensitive), pulls the quoted GATE name out, takes the location from
+the tail ("in …"), and accepts the line only when it looks like an announcement (a marker phrase
+such as *limited-time event* / *is now underway*) **or** when the name is a GATE the plugin knows
+about. Player chat that copies the wording is ignored. Other attendant small talk — “Prize Claim”
+counters, the GATE Keeper — is ignored.
 
 The five GATEs it knows: Air Force One, Any Way the Wind Blows, Cliffhanger, Leap of Faith,
 The Slice Is Right. Anything else can be added by typing its name into the custom list.
@@ -28,8 +29,8 @@ The window (`/gatealert`) has:
 
 - **Armed / Paused** — master switch.
 - **What to watch** — `Every GATE` (default), or tick any combination of the five; plus a custom
-  name list (comma separated, matched as a case-insensitive substring, so `leap` catches
-  Leap of Faith).
+  name list (comma separated, matched as a case-insensitive substring of at least 3 characters,
+  so `leap` catches Leap of Faith; shorter tokens are ignored).
 - **Output** — flavour text, optional screen toast (off by default: chat is the output), the
   "only while inside the Gold Saucer" guard (territory 144), and the accent colour key.
 - **Reminders** — how many chat lines an alert produces (default 3) and how far apart (default 45 s),
@@ -69,7 +70,8 @@ The parser and matcher are Dalamud-free, so they run outside the game:
 dotnet run --project GateAlert.Tests
 ```
 
-27 checks over the announcement shapes, the noise that must be ignored, and the watch/matching rules.
+Checks over the announcement shapes, player-spoof rejection, the noise that must be ignored, and
+the watch/matching rules.
 
 ## Notes and limits
 

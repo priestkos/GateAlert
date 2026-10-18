@@ -21,7 +21,7 @@ public sealed record GateAnnouncement(string GateName, string Location, string S
 public static class GateAnnouncementParser
 {
     private static readonly char[] OpenQuotes = ['“', '"', '「', '『', '«', '„'];
-    private static readonly char[] CloseQuotes = ['”', '"', '」', '』', '»', '“'];
+    private static readonly char[] CloseQuotes = ['”', '"', '」', '』', '»'];
 
     private static readonly string[] AnnouncementMarkers =
     [
@@ -32,8 +32,9 @@ public static class GateAnnouncementParser
     ];
 
     /// <summary>
-    /// True when the message looks like a GATE announcement and a GATE name could be read out of it.
+    /// True when the Gold Saucer Attendant announced a GATE and a name could be read out of it.
     /// <paramref name="extraNames"/> lets user-supplied names count as known GATEs.
+    /// Player chat is never accepted, even when it copies the announcement wording.
     /// </summary>
     public static bool TryParse(
         string? sender,
@@ -47,8 +48,10 @@ public static class GateAnnouncementParser
         if (text.Length == 0)
             return false;
 
-        var fromAttendant = !string.IsNullOrWhiteSpace(sender)
-                            && sender!.Contains(GateCatalog.AttendantSender, StringComparison.OrdinalIgnoreCase);
+        // Exact attendant only — substring would let forged sender names through.
+        var fromAttendant = IsAttendant(sender);
+        if (!fromAttendant)
+            return false;
 
         var marked = AnnouncementMarkers.Any(m => text.Contains(m, StringComparison.OrdinalIgnoreCase));
 
@@ -59,20 +62,45 @@ public static class GateAnnouncementParser
         if (name.Length == 0)
             return false;
 
-        // Either the line is phrased like an announcement, or the attendant said it and it names
-        // a GATE we know about (the built-in five, or something the user told us to watch).
-        // Anything else is noise: chatter, other quoted words, the GATE Keeper's small talk.
+        // Attendant + announcement phrasing, or attendant naming a GATE we know (built-in or custom).
         var known = IsKnownGate(name, extraNames);
-        if (!marked && !(fromAttendant && known))
+        if (!marked && !known)
             return false;
 
-        announcement = new GateAnnouncement(name, ExtractLocation(text), sender?.Trim() ?? string.Empty, text);
+        announcement = new GateAnnouncement(name, ExtractLocation(text), sender!.Trim(), text);
         return true;
     }
 
-    private static bool IsKnownGate(string name, IReadOnlyCollection<string>? extraNames) =>
-        GateCatalog.KnownGates.Any(g => name.Contains(g, StringComparison.OrdinalIgnoreCase))
-        || (extraNames is not null && extraNames.Any(g => !string.IsNullOrWhiteSpace(g) && name.Contains(g, StringComparison.OrdinalIgnoreCase)));
+    /// <summary>True when <paramref name="sender"/> is exactly the Gold Saucer Attendant.</summary>
+    public static bool IsAttendant(string? sender) =>
+        !string.IsNullOrWhiteSpace(sender)
+        && string.Equals(sender.Trim(), GateCatalog.AttendantSender, StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsKnownGate(string name, IReadOnlyCollection<string>? extraNames)
+    {
+        if (GateCatalog.KnownGates.Any(g => string.Equals(name, g, StringComparison.OrdinalIgnoreCase)))
+            return true;
+
+        if (extraNames is null)
+            return false;
+
+        foreach (var extra in extraNames)
+        {
+            if (string.IsNullOrWhiteSpace(extra))
+                continue;
+
+            var token = extra.Trim();
+            if (token.Length < GateMatcher.MinCustomTokenLength)
+                continue;
+
+            // Exact match, or the extracted name contains the custom token (same rule as the matcher).
+            if (string.Equals(name, token, StringComparison.OrdinalIgnoreCase)
+                || name.Contains(token, StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+
+        return false;
+    }
 
     /// <summary>Folds unicode oddities and whitespace so matching does not depend on them.</summary>
     private static string Normalize(string? message)
@@ -115,7 +143,10 @@ public static class GateAnnouncementParser
     }
 
     private static IEnumerable<string> CustomSafe(IReadOnlyCollection<string>? extraNames) =>
-        extraNames?.Where(g => !string.IsNullOrWhiteSpace(g)) ?? [];
+        extraNames?
+            .Where(g => !string.IsNullOrWhiteSpace(g) && g.Trim().Length >= GateMatcher.MinCustomTokenLength)
+            .Select(g => g.Trim())
+        ?? [];
 
     /// <summary>Everything after the last " in ", minus trailing punctuation.</summary>
     private static string ExtractLocation(string text)
@@ -150,11 +181,15 @@ public readonly record struct GateWatchSettings(
 /// <summary>Decides whether an announcement should be shouted about.</summary>
 public static class GateMatcher
 {
+    /// <summary>Custom tokens shorter than this are ignored (blocks "" / "a" false positives).</summary>
+    public const int MinCustomTokenLength = 3;
+
     /// <summary>Comma/semicolon separated extras, matched as case-insensitive substrings.</summary>
     public static IEnumerable<string> CustomTokens(string? csv) =>
         string.IsNullOrWhiteSpace(csv)
             ? []
-            : csv.Split([',', ';'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            : csv.Split([',', ';'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Where(t => t.Length >= MinCustomTokenLength);
 
     /// <summary>Is this GATE one of the watched ones?</summary>
     public static bool IsWatched(string? gateName, bool allGates, IReadOnlyCollection<string>? selectedGates, string? customCsv)
@@ -165,7 +200,10 @@ public static class GateMatcher
         if (allGates)
             return true;
 
-        if (selectedGates is not null && selectedGates.Any(g => gateName.Contains(g, StringComparison.OrdinalIgnoreCase)))
+        if (selectedGates is not null
+            && selectedGates.Any(g =>
+                !string.IsNullOrWhiteSpace(g)
+                && string.Equals(gateName, g.Trim(), StringComparison.OrdinalIgnoreCase)))
             return true;
 
         return CustomTokens(customCsv).Any(t => gateName.Contains(t, StringComparison.OrdinalIgnoreCase));
