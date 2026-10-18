@@ -2,6 +2,8 @@
 
 Simulated UI for Gate Alert — not in-game captures.
 
+Kept in sync with `ConfigWindow` / `GateAnnouncer` on `main` (post harden #1).
+
 | Path | What |
 | --- | --- |
 | [`mockups/`](mockups/) | HTML sources for each state |

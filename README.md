@@ -9,8 +9,9 @@ moment a GATE you care about goes live. Watch one GATE, several, or every GATE i
 
 ## Screenshots
 
-Simulated mocks of the shipping ImGui window and what the alert looks like in chat.
-HTML sources live under [`docs/mockups/`](docs/mockups/); PNGs under [`docs/screenshots/`](docs/screenshots/).
+Simulated mocks synced to the current `ConfigWindow` / `GateAnnouncer` build (armed with
+**stop nagging**, paused selective watch, chat shout + toast, concept card).
+HTML sources: [`docs/mockups/`](docs/mockups/). PNGs: [`docs/screenshots/`](docs/screenshots/).
 
 | Armed (every GATE) | Paused (selective) |
 | --- | --- |

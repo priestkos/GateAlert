@@ -5,7 +5,7 @@
 <title>Gate Alert — window mock (faithful)</title>
 <style>
   /* Faithful mock of the real ImGui window: layout, sizes and colours come from
-     Windows/ConfigWindow.cs. Deliberately plain — fidelity is the point.
+     Windows/ConfigWindow.cs (post harden #1). Deliberately plain — fidelity is the point.
      Palette: ImGui dark defaults + the style pushes in Draw(). */
   :root{
     --gold:#f5c74a;          /* 0.96,0.78,0.29  TextColored accent          */
@@ -47,7 +47,7 @@
   .titlebar .x{position:absolute;right:6px;top:1px;color:#cfcfd6;font-size:13px}
   .body{padding:12px 14px;display:flex;flex-direction:column;gap:8px}
 
-  .row{display:flex;align-items:center;gap:8px;min-height:19px}
+  .row{display:flex;align-items:center;gap:8px;min-height:19px;flex-wrap:wrap}
   .gold{color:var(--gold)}
   .dim{color:var(--gold-dim)}
   .muted{color:var(--muted)}
@@ -86,7 +86,6 @@
           border-radius:6px;position:relative;display:flex;align-items:center}
   .slider .grab{position:absolute;top:1px;bottom:1px;width:7px;background:var(--gold);border-radius:3px}
   .slider .value{position:absolute;left:50%;transform:translateX(-50%);font-size:12px}
-  .gap{display:flex;flex-direction:column;gap:8px}
 </style>
 </head>
 <body>
@@ -97,7 +96,7 @@
 
       <div class="row">
         <h1>GATE ALERT</h1>
-        <span class="btn pill btn-pill">  ARMED  </span>
+        <span class="btn pill">  ARMED  </span>
         <span class="dim">you are in the saucer</span>
       </div>
       <div class="muted">Watching the Gold Saucer Attendant for your GATE.</div>
@@ -142,6 +141,7 @@
       <div class="row">
         <span class="slider"><span class="grab" style="left:21px"></span><span class="value">45</span></span>
         <span>every (s)</span>
+        <span class="btn">stop nagging</span>
       </div>
       <hr>
 
@@ -155,18 +155,18 @@
       <hr>
 
       <h1>RECENT</h1>
-      <div class="row"><span class="gold">21:14:02&nbsp; Cliffhanger</span><span class="muted">the Event Square</span></div>
-      <div class="row"><span class="gold">21:07:55&nbsp; Any Way the Wind Blows</span><span class="muted">the Wonder Square</span></div>
+      <div class="row"><span class="gold">21:14:02&nbsp;&nbsp;Cliffhanger</span><span class="muted">the Event Square</span></div>
+      <div class="row"><span class="gold">21:07:55&nbsp;&nbsp;Any Way the Wind Blows</span><span class="muted">the Wonder Square</span></div>
       <hr>
 
       <div class="row">
         <span class="btn">Save &amp; close</span>
         <span class="btn">Fire a test alert</span>
-        <span class="muted">/gatealert&nbsp; •&nbsp; seen 3</span>
+        <span class="muted">/gatealert&nbsp;&nbsp;•&nbsp;&nbsp;seen 3</span>
       </div>
     </div>
   </div>
-  <div class="note">Faithful mock — <b>ImGui, 430 × 560</b>, Dalamud API 15. Colours, labels and order taken from <b>Windows/ConfigWindow.cs</b>; chips are dimmed because <b>Every GATE</b> is on.</div>
+  <div class="note">Faithful mock — <b>ImGui, 430 × 560</b>, post harden. Preview line from <b>GateAnnouncer.BuildPlainText</b>; <b>stop nagging</b> shown while repeats remain.</div>
 </div>
 </body>
 </html>
