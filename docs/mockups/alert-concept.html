@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Gate Alert — concept</title>
+<style>
+  /* Concept artifact: the flair direction for Gate Alert's identity (ticket-stub alert card,
+     carnival spotlight, gold foil type, the chat line as the payoff). Not the shipping ImGui UI —
+     mockup.html is that. */
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    min-height:100vh;padding:34px 26px 40px;
+    background:
+      radial-gradient(120% 90% at 12% 0%, #241a3d 0%, #140f22 42%, #0a0812 100%),
+      #0a0812;
+    font-family:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;
+    color:#f4eefc;
+    overflow-x:hidden;
+  }
+  /* drifting confetti specks */
+  .specks{position:fixed;inset:-10% -10%;pointer-events:none;opacity:.55;z-index:0;
+    background-image:
+      radial-gradient(2px 2px at 12% 22%, #ffd76a 50%, transparent 52%),
+      radial-gradient(2px 2px at 82% 14%, #ff7ad9 50%, transparent 52%),
+      radial-gradient(3px 3px at 63% 74%, #6ff0d4 50%, transparent 52%),
+      radial-gradient(2px 2px at 28% 82%, #ffd76a 50%, transparent 52%),
+      radial-gradient(2px 2px at 44% 38%, #b48bff 50%, transparent 52%),
+      radial-gradient(2px 2px at 91% 62%, #ffd76a 50%, transparent 52%),
+      radial-gradient(2px 2px at 7% 58%, #6ff0d4 50%, transparent 52%);
+    background-size:520px 520px, 470px 470px, 610px 610px, 430px 430px, 560px 560px, 500px 500px, 380px 380px;
+    animation:drift 42s linear infinite;
+  }
+  @keyframes drift{from{transform:translate3d(0,0,0)}to{transform:translate3d(-90px,-140px,0)}}
+
+  .stage{position:relative;z-index:1;max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+
+  .kicker{display:flex;align-items:center;gap:12px;color:#c3b3e6;font-size:12.5px;letter-spacing:.24em;text-transform:uppercase}
+  .kicker .dash{flex:1;height:1px;background:linear-gradient(90deg,rgba(245,199,74,.8),rgba(245,199,74,0))}
+
+  /* ---------- the alert card ---------- */
+  .card{
+    position:relative;border-radius:20px;overflow:hidden;
+    background:
+      radial-gradient(140% 120% at 78% 8%, rgba(255,122,217,.28) 0%, rgba(255,122,217,0) 55%),
+      radial-gradient(120% 140% at 8% 92%, rgba(111,240,212,.22) 0%, rgba(111,240,212,0) 60%),
+      linear-gradient(160deg,#2a1c4d 0%,#180f31 55%,#0f0a1e 100%);
+    border:1px solid rgba(245,199,74,.34);
+    box-shadow:0 30px 80px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.07);
+  }
+  /* spotlight rays behind the title */
+  .rays{position:absolute;inset:-40% -20% auto -20%;height:150%;opacity:.32;
+    background:conic-gradient(from 0deg at 50% 40%,
+      rgba(245,199,74,.55) 0 4deg, transparent 4deg 18deg,
+      rgba(255,122,217,.42) 18deg 22deg, transparent 22deg 38deg,
+      rgba(245,199,74,.35) 38deg 42deg, transparent 42deg 60deg);
+    -webkit-mask-image:radial-gradient(closest-side at 50% 40%, #000 20%, transparent 78%);
+            mask-image:radial-gradient(closest-side at 50% 40%, #000 20%, transparent 78%);
+    animation:sweep 26s linear infinite;pointer-events:none;
+  }
+  @keyframes sweep{to{transform:rotate(360deg)}}
+
+  /* torn ticket edges */
+  .card:before,.card:after{
+    content:"";position:absolute;left:0;right:0;height:14px;
+    background:repeating-linear-gradient(90deg, transparent 0 9px, #0a0812 9px 18px);
+  }
+  .card:before{top:-1px;transform:scaleY(-1)}
+  .card:after{bottom:-1px}
+
+  .card-inner{position:relative;padding:34px 34px 30px;display:flex;flex-direction:column;gap:16px}
+
+  .stub{display:flex;justify-content:space-between;align-items:baseline;font-size:11.5px;letter-spacing:.3em;text-transform:uppercase;color:#d9c98f}
+  .stub .live{display:inline-flex;align-items:center;gap:8px;color:#6bdc78}
+  .dot{width:8px;height:8px;border-radius:50%;background:#6bdc78;box-shadow:0 0 0 0 rgba(107,220,120,.6);animation:ping 1.8s ease-out infinite}
+  @keyframes ping{0%{box-shadow:0 0 0 0 rgba(107,220,120,.55)}100%{box-shadow:0 0 0 16px rgba(107,220,120,0)}}
+
+  .title{
+    font-size:clamp(38px,7.4vw,68px);line-height:.98;font-weight:800;letter-spacing:-.02em;margin:0;
+    background:linear-gradient(96deg,#fff4cf 0%,#f5c74a 34%,#ffe9a3 52%,#f5c74a 68%,#fff6d6 100%);
+    background-size:220% 100%;
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:foil 6.5s ease-in-out infinite;
+    text-shadow:0 0 42px rgba(245,199,74,.18);
+  }
+  @keyframes foil{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+  .gatename{
+    display:flex;flex-wrap:wrap;align-items:center;gap:14px;
+  }
+  .gate-badge{
+    font-size:clamp(14px,2.2vw,17px);font-weight:700;letter-spacing:.01em;color:#150e28;
+    background:linear-gradient(180deg,#ffe9a3,#f5c74a 60%,#e0a92c);
+    border-radius:999px;padding:7px 16px;box-shadow:0 8px 22px rgba(245,199,74,.28);
+  }
+  .where{font-size:13px;color:#cbbdf0;letter-spacing:.06em;border:1px dashed rgba(203,189,240,.4);border-radius:999px;padding:6px 13px}
+
+  .flavour{margin:0;color:#cdbdf2;font-size:15px;font-style:italic}
+
+  /* chat-line payoff */
+  .chatlog{background:rgba(8,6,16,.72);border:1px solid rgba(245,199,74,.22);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:9px}
+  .chatlog .head{font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:#8f83b3}
+  .line{font-family:"DejaVu Sans Mono",Consolas,monospace;font-size:13px;color:#efe9ff;display:flex;gap:8px;align-items:baseline}
+  .line .star{color:#f5c74a}
+  .line .tag{color:#f5c74a;letter-spacing:.08em}
+  .line.faded{opacity:.62}
+  .line .flav{color:#b9a7e0;font-style:italic}
+
+  .footer{display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between;font-size:12.5px;color:#a99cc9}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{border:1px solid rgba(185,167,224,.35);border-radius:999px;padding:5px 12px;font-size:12px;color:#d9cff2}
+  .chip.on{border-color:rgba(245,199,74,.7);color:#f5c74a;background:rgba(245,199,74,.1)}
+</style>
+</head>
+<body>
+<div class="specks"></div>
+
+<div class="stage">
+  <div class="kicker">Gold Saucer · Gate Alert <span class="dash"></span> concept</div>
+
+  <section class="card">
+    <div class="rays"></div>
+    <div class="card-inner">
+      <div class="stub">
+        <span>Admit one · MGP awaits</span>
+        <span class="live"><span class="dot"></span>open now</span>
+      </div>
+
+      <h2 class="title">GATE<br>ALERT</h2>
+
+      <div class="gatename">
+        <span class="gate-badge">★ Cliffhanger</span>
+        <span class="where">event square</span>
+      </div>
+
+      <p class="flavour">go go go! — the saucer will not wait for you.</p>
+
+      <div class="chatlog">
+        <div class="head">what lands in your log</div>
+        <div class="line"><span class="star">★</span><span class="tag">GATE ALERT</span><span>“Cliffhanger” is up — the Event Square</span><span class="flav">(go go go!)</span></div>
+        <div class="line faded"><span class="star">★</span><span class="tag">GATE ALERT 2/3</span><span>“Cliffhanger” is up — the Event Square</span></div>
+        <div class="line faded"><span class="star">★</span><span class="tag">GATE ALERT 3/3</span><span>“Cliffhanger” is up — the Event Square</span></div>
+      </div>
+
+      <div class="footer">
+        <div class="chips">
+          <span class="chip">Air Force One</span>
+          <span class="chip">Any Way the Wind Blows</span>
+          <span class="chip on">Cliffhanger</span>
+          <span class="chip">Leap of Faith</span>
+          <span class="chip on">The Slice Is Right</span>
+        </div>
+        <span>watch one · several · every GATE</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="kicker">idea shelf <span class="dash"></span></div>
+  <div class="chips" style="justify-content:flex-start">
+    <span class="chip on">gold foil alert line</span>
+    <span class="chip">ticket-stub toast</span>
+    <span class="chip">per-GATE chime</span>
+    <span class="chip">MGP haul counter</span>
+  </div>
+</div>
+</body>
+</html>

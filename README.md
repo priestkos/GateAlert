@@ -7,6 +7,19 @@ moment a GATE you care about goes live. Watch one GATE, several, or every GATE i
 ★ GATE ALERT  “Cliffhanger” is up — the Event Square  (go go go!)
 ```
 
+## Screenshots
+
+Simulated mocks of the shipping ImGui window and what the alert looks like in chat.
+HTML sources live under [`docs/mockups/`](docs/mockups/); PNGs under [`docs/screenshots/`](docs/screenshots/).
+
+| Armed (every GATE) | Paused (selective) |
+| --- | --- |
+| ![Config window armed](docs/screenshots/01-config-armed.png) | ![Config window paused](docs/screenshots/02-config-paused.png) |
+
+![Chat shout + optional toast when Cliffhanger goes live](docs/screenshots/03-chat-alert.png)
+
+![Concept flair — ticket-stub alert card](docs/screenshots/04-alert-concept.png)
+
 ## How it detects a GATE
 
 The Gold Saucer Attendant announces each GATE in chat, roughly:
@@ -81,4 +94,4 @@ dotnet run --project GateAlert.Tests
 - The accent uses the chat colour palette key (60 = the yellow Dalamud's own sample uses, 500 = the
   link colour); any key is accepted in the box next to the presets.
 - `mockup.html` is a faithful mock of the window; `concept.html` is the flair direction, not the
-  shipping UI.
+  shipping UI. Extra state mocks and rendered PNGs are under `docs/mockups/` and `docs/screenshots/`.
