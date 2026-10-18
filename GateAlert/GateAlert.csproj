@@ -15,7 +15,7 @@
     <Punchline>Yells at you the moment your GATE opens in the Gold Saucer.</Punchline>
     <Description>Watches the Gold Saucer Attendant's announcements and prints a loud chat line when a GATE you care about goes live. Pick one GATE, several, or every GATE in the saucer.</Description>
     <PackageTags>goldsaucer;gate;mgp;alert;notification</PackageTags>
-    <RepoUrl>https://github.com/saijm/GateAlert</RepoUrl>
+    <RepoUrl>https://github.com/priestkos/GateAlert</RepoUrl>
   </PropertyGroup>
 
 </Project>

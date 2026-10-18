@@ -79,14 +79,14 @@ public sealed class GateWatcher : IDisposable
             var text = message.Message?.ToString();
 
             var extra = GateMatcher.CustomTokens(this.configuration.CustomGates)
-                .Concat(this.configuration.SelectedGates)
+                .Concat(this.configuration.SelectedGates.Where(g => !string.IsNullOrWhiteSpace(g)))
                 .ToList();
 
             if (!GateAnnouncementParser.TryParse(sender, text, out var announcement, extra))
                 return;
 
             this.SeenCount++;
-            this.LastSeenAt = DateTime.Now;
+            this.LastSeenAt = DateTime.UtcNow;
             this.LastSeenName = announcement.GateName;
 
             if (!GateMatcher.ShouldAnnounce(announcement, this.configuration.ToSettings(this.clientState.TerritoryType)))
@@ -116,21 +116,27 @@ public sealed class GateWatcher : IDisposable
     public void FireTest(string gateName, string location)
     {
         var name = string.IsNullOrWhiteSpace(gateName) ? GateCatalog.KnownGates[2] : gateName.Trim();
+        if (name.Length > 64)
+            name = name[..64];
+
         var where = string.IsNullOrWhiteSpace(location) ? "the Gold Saucer" : location.Trim();
+        if (where.Length > 64)
+            where = where[..64];
+
         this.Fire(new GateAnnouncement(name, where, GateCatalog.AttendantSender, "test"), forced: true);
     }
 
     private void Fire(GateAnnouncement announcement, bool forced)
     {
         this.LastAnnouncement = announcement;
-        this.LastAnnouncementAt = DateTime.Now;
+        this.LastAnnouncementAt = DateTime.UtcNow;
         this.lastShoutName = announcement.GateName;
         this.lastShoutAt = DateTime.UtcNow;
 
         var total = Math.Clamp(this.configuration.RepeatCount, 1, 10);
         this.announcer.Announce(announcement, this.configuration, 1, total);
 
-        this.history.Insert(0, new GateHistoryEntry(announcement.GateName, announcement.DisplayLocation, DateTime.Now, forced));
+        this.history.Insert(0, new GateHistoryEntry(announcement.GateName, announcement.DisplayLocation, DateTime.UtcNow, forced));
         while (this.history.Count > HistoryLimit)
             this.history.RemoveAt(this.history.Count - 1);
 
@@ -146,7 +152,8 @@ public sealed class GateWatcher : IDisposable
             return;
 
         var announcement = this.LastAnnouncement;
-        if (announcement is null || !this.configuration.Enabled)
+        if (announcement is null
+            || !GateMatcher.ShouldAnnounce(announcement, this.configuration.ToSettings(this.clientState.TerritoryType)))
         {
             this.repeatsRemaining = 0;
             this.Changed?.Invoke();

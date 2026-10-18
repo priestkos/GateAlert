@@ -46,12 +46,28 @@ internal static class Program
         Parses(Attendant, "The \u201cBlunderville Sprint\u201d GATE is now open!",
             "Blunderville Sprint", string.Empty, ["Blunderville Sprint"]);
 
+        // Attendant sender is matched exactly (trim + case-insensitive), not as a substring.
+        Parses("  gold saucer attendant  ", "A limited-time event \u201cCliffhanger\u201d is now underway in the Event Square.",
+            "Cliffhanger", "the Event Square");
+
         // ---- parsing: what must NOT fire ----
         Rejects("Random Player", "That \"Cliffhanger\" was fun, eh?");
         Rejects(Attendant, "Please visit the \u201cPrize Claim\u201d counter when you have a moment.");
         Rejects(Attendant, "Speak with the \u201cGate Keeper\u201d for details on upcoming events.");
         Rejects(Attendant, string.Empty);
         Rejects(Attendant, "A limited-time event is now underway in the Event Square.");
+
+        // Player spoof: same wording as a real announcement, wrong sender — must not parse.
+        Rejects("Random Player", "A limited-time event \u201cCliffhanger\u201d is now underway in the Event Square.");
+        Rejects("Random Player", "A limited-time event \"Any Way the Wind Blows\" is now underway in the Wonder Square.");
+        Rejects("Totally Not Gold Saucer Attendant", "A limited-time event \u201cCliffhanger\u201d is now underway in the Event Square.");
+        Rejects("Gold Saucer Attendant's Cousin", "A limited-time event \u201cCliffhanger\u201d is now underway in the Event Square.");
+        Rejects(string.Empty, "A limited-time event \u201cCliffhanger\u201d is now underway in the Event Square.");
+        Rejects(null!, "A limited-time event \u201cCliffhanger\u201d is now underway in the Event Square.");
+
+        // Doubled open curly quotes must not truncate via a bogus close-quote set.
+        Parses(Attendant, "A limited-time event \u201cCliffhanger\u201d is now underway in the Event Square.",
+            "Cliffhanger", "the Event Square");
 
         // ---- matching ----
         var cliffhanger = new GateAnnouncement("Cliffhanger", "the Event Square", Attendant, "x");
@@ -72,8 +88,13 @@ internal static class Program
         Check("custom comma list matches the second token", GateMatcher.ShouldAnnounce(new GateAnnouncement("The Slice Is Right", "the Round Square", Attendant, "x"), new GateWatchSettings(true, true, inSaucer, false, [], "cliffhanger, the slice")));
         Check("an unlisted GATE stays quiet", !GateMatcher.ShouldAnnounce(wind, new GateWatchSettings(true, true, inSaucer, false, [], "cliffhanger, the slice")));
         Check("custom list is case-insensitive substring", GateMatcher.ShouldAnnounce(new GateAnnouncement("Leap of Faith", "the Event Square", Attendant, "x"), new GateWatchSettings(true, true, inSaucer, false, [], "leap")));
-        Check("semicolon separated customs work", GateMatcher.CustomTokens("a; b , c").SequenceEqual(["a", "b", "c"]));
+        Check("semicolon separated customs drop short tokens", GateMatcher.CustomTokens("a; bee , ccc").SequenceEqual(["bee", "ccc"]));
         Check("no match is a no-op", !GateMatcher.ShouldAnnounce(wind, new GateWatchSettings(true, true, inSaucer, false, ["Cliffhanger"], "cliffhanger")));
+        Check("empty selected entry does not match everything", !GateMatcher.ShouldAnnounce(wind, new GateWatchSettings(true, true, inSaucer, false, [""], string.Empty)));
+        Check("single-char custom token is ignored", !GateMatcher.ShouldAnnounce(wind, new GateWatchSettings(true, true, inSaucer, false, [], "a")));
+        Check("two-char custom token is ignored", !GateMatcher.ShouldAnnounce(new GateAnnouncement("Leap of Faith", "the Event Square", Attendant, "x"), new GateWatchSettings(true, true, inSaucer, false, [], "of")));
+        Check("IsAttendant is exact", GateAnnouncementParser.IsAttendant(Attendant));
+        Check("IsAttendant rejects substring spoof", !GateAnnouncementParser.IsAttendant("Not the Gold Saucer Attendant"));
 
         Console.WriteLine($"\n{passed} passed, {failed} failed");
         return failed == 0 ? 0 : 1;
@@ -98,9 +119,9 @@ internal static class Program
     private static void Rejects(string sender, string message)
     {
         if (GateAnnouncementParser.TryParse(sender, message, out var parsed))
-            Fail($"\"{Shorten(message)}\" from {sender} should be ignored, parsed as {parsed.GateName}");
+            Fail($"\"{Shorten(message)}\" from {sender ?? "(null)"} should be ignored, parsed as {parsed.GateName}");
         else
-            Pass($"ignored \"{Shorten(message)}\" from {sender}");
+            Pass($"ignored \"{Shorten(message)}\" from {sender ?? "(null)"}");
     }
 
     private static void Check(string what, bool ok)

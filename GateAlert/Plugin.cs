@@ -38,6 +38,7 @@ public sealed class GateAlertPlugin : IDalamudPlugin
         this.log = log;
 
         this.configuration = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+        this.configuration.Sanitize();
         this.announcer = new GateAnnouncer(chatGui, toastGui, log);
         this.watcher = new GateWatcher(chatGui, clientState, framework, log, this.configuration, this.announcer);
         this.configWindow = new ConfigWindow(this.configuration, this.watcher, this.SaveConfiguration);
@@ -65,25 +66,26 @@ public sealed class GateAlertPlugin : IDalamudPlugin
 
     private void OnCommand(string command, string args)
     {
-        var trimmed = args.Trim();
+        var parts = args.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        var verb = parts.Length > 0 ? parts[0] : string.Empty;
 
-        if (trimmed.StartsWith("on", StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(verb, "on", StringComparison.OrdinalIgnoreCase))
         {
             this.configuration.Enabled = true;
             this.SaveConfiguration();
             return;
         }
 
-        if (trimmed.StartsWith("off", StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(verb, "off", StringComparison.OrdinalIgnoreCase))
         {
             this.configuration.Enabled = false;
             this.SaveConfiguration();
             return;
         }
 
-        if (trimmed.StartsWith("test", StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(verb, "test", StringComparison.OrdinalIgnoreCase))
         {
-            var name = trimmed.Length > 4 ? trimmed[4..].Trim() : string.Empty;
+            var name = parts.Length > 1 ? string.Join(' ', parts.Skip(1)) : string.Empty;
             this.watcher.FireTest(name, "the Event Square");
             return;
         }
@@ -96,7 +98,11 @@ public sealed class GateAlertPlugin : IDalamudPlugin
 
     private void OpenConfig() => this.configWindow.IsOpen = true;
 
-    private void SaveConfiguration() => this.pluginInterface.SavePluginConfig(this.configuration);
+    private void SaveConfiguration()
+    {
+        this.configuration.Sanitize();
+        this.pluginInterface.SavePluginConfig(this.configuration);
+    }
 
     public void Dispose()
     {
