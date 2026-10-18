@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Gate Alert — paused / selective watch</title>
 <style>
-  /* Faithful mock variant: paused master switch + selective GATE chips. */
+  /* Faithful mock variant: paused master switch + selective GATE chips (latest ConfigWindow). */
   :root{
     --gold:#f5c74a;
     --gold-dim:rgba(245,199,74,.55);
@@ -26,8 +26,7 @@
     color:var(--text);
   }
   .stage{display:flex;flex-direction:column;align-items:flex-start;gap:10px}
-  .note{color:#8a8a96;font-size:11.5px;letter-spacing:.02em}
-  .note b{color:var(--gold);font-weight:400}
+  .note{display:none!important}
 
   .window{
     width:430px;height:560px;
@@ -83,7 +82,6 @@
           border-radius:6px;position:relative;display:flex;align-items:center}
   .slider .grab{position:absolute;top:1px;bottom:1px;width:7px;background:var(--gold);border-radius:3px}
   .slider .value{position:absolute;left:50%;transform:translateX(-50%);font-size:12px}
-.note{display:none!important}
 </style>
 </head>
 <body>
@@ -97,13 +95,13 @@
         <span class="btn pill">  PAUSED  </span>
         <span class="dim">you are in the saucer</span>
       </div>
-      <div class="muted">Watching is off — arm it when you are ready to run.</div>
+      <div class="muted">Paused — announcements are ignored until you arm it again.</div>
       <hr>
 
       <h1>WHAT TO WATCH</h1>
       <div class="row">
         <span class="check"><span class="box"></span>Every GATE</span>
-        <span class="muted">pick the ones you care about</span>
+        <span class="muted">3 selected</span>
       </div>
       <div class="chips">
         <span class="btn chip">Air Force One</span>
@@ -152,18 +150,17 @@
       <hr>
 
       <h1>RECENT</h1>
-      <div class="row"><span class="gold">21:14:02&nbsp; Cliffhanger</span><span class="muted">the Event Square</span><span class="muted">(test)</span></div>
-      <div class="row"><span class="muted">— nothing live yet this session —</span></div>
+      <div class="row"><span class="muted">21:14:02&nbsp;&nbsp;Cliffhanger</span><span class="muted">(test)</span></div>
       <hr>
 
       <div class="row">
         <span class="btn">Save &amp; close</span>
         <span class="btn">Fire a test alert</span>
-        <span class="muted">/gatealert&nbsp; •&nbsp; seen 1</span>
+        <span class="muted">/gatealert&nbsp;&nbsp;•&nbsp;&nbsp;seen 1</span>
       </div>
     </div>
   </div>
-  <div class="note">Paused + selective — <b>Every GATE</b> off, three chips lit, custom names <b>leap, cliff</b>.</div>
+  <div class="note">Paused + selective — copy matches ConfigWindow after harden #1.</div>
 </div>
 </body>
 </html>
