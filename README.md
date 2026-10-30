@@ -1,7 +1,12 @@
 # Gate Alert
 
-A Dalamud plugin that watches the Gold Saucer Attendant's chat line and shouts in your chat log the
-moment a GATE you care about goes live. Watch one GATE, several, or every GATE in the saucer.
+A Dalamud plugin that shouts in your chat log when a GATE you watch opens in the Gold Saucer.
+
+`/gatealert` · Dalamud API 15 · .NET 10
+
+## What it does
+
+Prints a starred chat line (and optionally a toast) when a watched GATE opens, and repeats it.
 
 ```
 ★ GATE ALERT  “Cliffhanger” is up — the Event Square  (go go go!)
@@ -9,9 +14,7 @@ moment a GATE you care about goes live. Watch one GATE, several, or every GATE i
 
 ## Screenshots
 
-Simulated mocks synced to the current `ConfigWindow` / `GateAnnouncer` build (armed with
-**stop nagging**, paused selective watch, chat shout + toast, concept card).
-HTML sources: [`docs/mockups/`](docs/mockups/). PNGs: [`docs/screenshots/`](docs/screenshots/).
+Simulated mocks synced to the current `ConfigWindow` / `GateAnnouncer` build: armed with **stop nagging**, paused selective watch, chat shout + toast, concept card. Sources: [`docs/mockups/`](docs/mockups/), PNGs: [`docs/screenshots/`](docs/screenshots/).
 
 | Armed (every GATE) | Paused (selective) |
 | --- | --- |
@@ -21,36 +24,15 @@ HTML sources: [`docs/mockups/`](docs/mockups/). PNGs: [`docs/screenshots/`](docs
 
 ![Concept flair — ticket-stub alert card](docs/screenshots/04-alert-concept.png)
 
-## How it detects a GATE
+## How it works
 
-The Gold Saucer Attendant announces each GATE in chat, roughly:
+The attendant announces each GATE in chat:
 
 > A limited-time event “Cliffhanger” is now underway in the Event Square.
 
-`GateAlert.Core.GateAnnouncementParser` reads that line: it requires the sender to be exactly the
-Gold Saucer Attendant (case-insensitive), pulls the quoted GATE name out, takes the location from
-the tail ("in …"), and accepts the line only when it looks like an announcement (a marker phrase
-such as *limited-time event* / *is now underway*) **or** when the name is a GATE the plugin knows
-about. Player chat that copies the wording is ignored. Other attendant small talk — “Prize Claim”
-counters, the GATE Keeper — is ignored.
+`GateAlert.Core.GateAnnouncementParser` needs the sender to be exactly the Gold Saucer Attendant (case-insensitive), pulls the quoted name, takes the location from the tail ("in …"), and accepts the line only when it carries an announcement marker (*limited-time event*, *is now underway*) **or** names a GATE it knows. Player chat copying the wording is ignored, as is other attendant small talk (Prize Claim counters, the GATE Keeper).
 
-The five GATEs it knows: Air Force One, Any Way the Wind Blows, Cliffhanger, Leap of Faith,
-The Slice Is Right. Anything else can be added by typing its name into the custom list.
-
-## Configuration
-
-The window (`/gatealert`) has:
-
-- **Armed / Paused** — master switch.
-- **What to watch** — `Every GATE` (default), or tick any combination of the five; plus a custom
-  name list (comma separated, matched as a case-insensitive substring of at least 3 characters,
-  so `leap` catches Leap of Faith; shorter tokens are ignored).
-- **Output** — flavour text, optional screen toast (off by default: chat is the output), the
-  "only while inside the Gold Saucer" guard (territory 144), and the accent colour key.
-- **Reminders** — how many chat lines an alert produces (default 3) and how far apart (default 45 s),
-  so the first line is not the only chance to notice.
-- **Live preview** — the exact line the plugin prints.
-- **Recent** — the last few detections, marked `(test)` when you fired them yourself.
+Five are built in: Air Force One, Any Way the Wind Blows, Cliffhanger, Leap of Faith, The Slice Is Right. The custom list adds more, and the same GATE inside 10 s is not shouted twice.
 
 ## Commands
 
@@ -63,18 +45,30 @@ The window (`/gatealert`) has:
 
 Test alerts bypass the filters on purpose, so you can check the chat line without waiting for a GATE.
 
+## Settings
+
+- **Armed / Paused** — master switch.
+- **What to watch** — `Every GATE` (default), any of the five, plus a custom list (comma separated, case-insensitive substring of 3+ characters: `leap` catches Leap of Faith; shorter tokens ignored).
+- **Output** — flavour text; toast (off by default: chat is the output); Gold Saucer-only guard (territory 144); accent colour key (60 = Dalamud's yellow sample, 500 = the link colour, any key accepted).
+- **Reminders** — chat lines per alert (default 3) and seconds apart (default 45).
+- **Live preview** — the exact line it prints.
+- **Recent** — last detections, `(test)` when fired by hand.
+
 ## Build
 
+Requires the .NET 10 SDK and the Dalamud dev distribution (`%APPDATA%\XIVLauncher\addon\Hooks\dev`).
+
 ```
-dotnet build -c Release
+dotnet build GateAlert/GateAlert.csproj -c Release
 ```
 
-Needs the .NET 10 SDK and the Dalamud dev distribution (`%AppData%\XIVLauncher\addon\Hooks\dev`).
-Output: `GateAlert/bin/Release/GateAlert/`.
+Output: `GateAlert/bin/Release/GateAlert.dll`, with the plugin zip in `GateAlert/bin/Release/GateAlert/latest.zip`.
 
-To run it: `/xlsettings` → Experimental → Dev Plugin Locations → add
-`D:\XIVPlugins Self\GateAlert\GateAlert\bin\Debug\GateAlert.dll`, then enable **Gate Alert** under
-`/xlplugins` → Dev Tools. Hot reload works, so rebuild while the game is running.
+## Install (dev plugin)
+
+1. `/xlsettings` → Experimental → Dev Plugin Locations → add `GateAlert/bin/Debug/GateAlert.dll` (from `dotnet build GateAlert/GateAlert.csproj -c Debug`).
+2. `/xlplugins` → Dev Tools → enable **Gate Alert**.
+3. `/gatealert` opens the window; hot reload works, so rebuild while the game runs.
 
 ## Tests
 
@@ -82,19 +76,26 @@ The parser and matcher are Dalamud-free, so they run outside the game:
 
 ```
 dotnet run --project GateAlert.Tests
+# 40 passed, 0 failed
 ```
 
-Checks over the announcement shapes, player-spoof rejection, the noise that must be ignored, and
-the watch/matching rules.
+Covers the announcement shapes, player-spoof rejection, the noise that must be ignored, and the watch/matching rules.
 
-## Notes and limits
+## Limits
 
-- The announcement is a chat line, so the plugin only ever fires while the client is receiving it —
-  which is inside the Gold Saucer. The "only inside the Gold Saucer" guard is a belt-and-braces extra.
-- Matching is written against the English wording. Other client languages announce GATEs with the
-  same shape but different phrases; the sender check plus the known-name path still catches the five
-  built-in GATEs there, but the custom list is the escape hatch for anything else.
-- The accent uses the chat colour palette key (60 = the yellow Dalamud's own sample uses, 500 = the
-  link colour); any key is accepted in the box next to the presets.
-- `mockup.html` is a faithful mock of the window; `concept.html` is the flair direction, not the
-  shipping UI. Extra state mocks and rendered PNGs are under `docs/mockups/` and `docs/screenshots/`.
+- An announcement is a chat line, so an alert only fires while the client receives it — in practice inside the Gold Saucer; the territory-144 guard is extra belt-and-braces.
+- Matching assumes the English wording. Other languages use the same shape with different phrases: the sender check plus known names should still catch the five built-ins — not verified — and the custom list is the escape hatch.
+- `mockup.html` is a faithful mock of the window; `concept.html` is the flair direction, not the shipping UI. More mocks and PNGs under `docs/mockups/` and `docs/screenshots/`.
+
+## Layout
+
+```
+GateAlert/Core/GateAnnouncement.cs  parser + matcher
+GateAlert/Core/GateCatalog.cs       five GATEs, sender, territory 144
+GateAlert/Core/GateWatcher.cs       chat hook, 10 s duplicate window, repeats
+GateAlert/Core/GateAnnouncer.cs     chat line + toast
+GateAlert/Configuration.cs          IPluginConfiguration
+GateAlert/Windows/ConfigWindow.cs   the window
+GateAlert/Plugin.cs                 services, commands
+GateAlert.Tests/Program.cs          offline harness
+```
