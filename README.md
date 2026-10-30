@@ -12,18 +12,6 @@ Prints a starred chat line (and optionally a toast) when a watched GATE opens, a
 ★ GATE ALERT  “Cliffhanger” is up — the Event Square  (go go go!)
 ```
 
-## Screenshots
-
-Simulated mocks synced to the current `ConfigWindow` / `GateAnnouncer` build: armed with **stop nagging**, paused selective watch, chat shout + toast, concept card. Sources: [`docs/mockups/`](docs/mockups/), PNGs: [`docs/screenshots/`](docs/screenshots/).
-
-| Armed (every GATE) | Paused (selective) |
-| --- | --- |
-| ![Config window armed](docs/screenshots/01-config-armed.png) | ![Config window paused](docs/screenshots/02-config-paused.png) |
-
-![Chat shout + optional toast when Cliffhanger goes live](docs/screenshots/03-chat-alert.png)
-
-![Concept flair — ticket-stub alert card](docs/screenshots/04-alert-concept.png)
-
 ## How it works
 
 The attendant announces each GATE in chat:
@@ -85,7 +73,6 @@ Covers the announcement shapes, player-spoof rejection, the noise that must be i
 
 - An announcement is a chat line, so an alert only fires while the client receives it — in practice inside the Gold Saucer; the territory-144 guard is extra belt-and-braces.
 - Matching assumes the English wording. Other languages use the same shape with different phrases: the sender check plus known names should still catch the five built-ins — not verified — and the custom list is the escape hatch.
-- `mockup.html` is a faithful mock of the window; `concept.html` is the flair direction, not the shipping UI. More mocks and PNGs under `docs/mockups/` and `docs/screenshots/`.
 
 ## Layout
 
