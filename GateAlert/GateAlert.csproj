@@ -9,8 +9,8 @@
     <AssemblyName>GateAlert</AssemblyName>
     <RootNamespace>GateAlert</RootNamespace>
 
-    <Author>saijm</Author>
-    <Authors>saijm</Authors>
+    <Author>PriestKos</Author>
+    <Authors>PriestKos</Authors>
     <Name>Gate Alert</Name>
     <Punchline>Yells at you the moment your GATE opens in the Gold Saucer.</Punchline>
     <Description>Watches the Gold Saucer Attendant's announcements and prints a loud chat line when a GATE you care about goes live. Pick one GATE, several, or every GATE in the saucer.</Description>
