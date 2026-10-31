@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="dalamud-mock.css" />
+  <title>02 — Gate picker &amp; custom list</title>
+</head>
+<body>
+  <div class="scene">
+    <p class="hud-label">Stylised backdrop — not game art</p>
+    <div class="imwin pos-tr">
+      <div class="imwin-title">Gate Alert <span class="x">×</span></div>
+      <div class="imwin-body">
+        <div class="row">
+          <span class="gold">GATE ALERT</span>
+          <button class="pill pill-paused">PAUSED</button>
+          <span class="muted">not in the saucer</span>
+        </div>
+        <p class="muted">Paused — announcements are ignored until you arm it again.</p>
+
+        <div class="sep"></div>
+        <p class="gold" style="margin-bottom:8px;">WHAT TO WATCH</p>
+        <div class="row">
+          <label class="cb"><span class="cb-box off"></span> Every GATE</label>
+          <span class="muted">2 selected</span>
+        </div>
+        <div class="row">
+          <button class="gate-btn">Air Force One</button>
+          <button class="gate-btn">Any Way the Wind Blows</button>
+          <button class="gate-btn on">Cliffhanger</button>
+          <button class="gate-btn on">Leap of Faith</button>
+          <button class="gate-btn">The Slice Is Right</button>
+        </div>
+        <input class="input" type="text" value="slice, wind" readonly />
+
+        <div class="sep"></div>
+        <p class="muted" style="font-size:11px;line-height:1.5;">
+          Slash commands (same window via <span style="color:#ccc;">/gatealert</span>):
+          <span style="color:#f5c74a;">/gatealert on</span> ·
+          <span style="color:#f5c74a;">/gatealert off</span> ·
+          <span style="color:#f5c74a;">/gatealert test Cliffhanger</span> ·
+          <span style="color:#f5c74a;">/gatetest</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
