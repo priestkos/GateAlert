@@ -47,4 +47,4 @@ jobs:
             10.0.x
 
       - name: Run the unit tests
-        run: dotnet run --project GateAlert/GateAlert.Tests/GateAlert.Tests.csproj -c Release
+        run: dotnet run --project GateAlert.Tests/GateAlert.Tests.csproj -c Release
