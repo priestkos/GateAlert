@@ -32,8 +32,6 @@ These clips are mock-ups illustrating the UI, not captures from the live game.
 
 [Download mock-up walkthrough (MP4)](docs/videos/mockup-walkthrough.mp4)
 
-Regenerate from `docs/videos/src/` (see `docs/videos/README.md`).
-
 ### Feature coverage (every user-facing surface)
 
 | Feature | Shown in |
@@ -64,8 +62,6 @@ Regenerate from `docs/videos/src/` (see `docs/videos/README.md`).
 | Chat alert + reminder index output | 04 |
 | Screen toast when enabled | 04 |
 | Dalamud **Open Config** / **Open Main UI** → same window | 05 (caption) |
-
-Regenerate mock-ups from `docs/screenshots/src/` (see `docs/screenshots/README.md`).
 
 ## How it works
 
