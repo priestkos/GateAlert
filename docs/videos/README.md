@@ -5,5 +5,6 @@
 Sources:
 
 - `src/walkthrough-intro.html` — opening disclaimer card
+- `src/walkthrough-overlay.js` — on-screen cursor, click ripple, scene fades
 - `src/render.mjs`
 - Scene HTML lives in `../screenshots/src/` (shared with the PNG mock-ups)
