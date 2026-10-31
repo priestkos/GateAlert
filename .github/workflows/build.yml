@@ -1,0 +1,38 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Download Dalamud
+        run: |
+          Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/latest.zip -OutFile latest.zip
+          Expand-Archive -Force latest.zip "$env:AppData\XIVLauncher\addon\Hooks\dev"
+
+      - name: Restore
+        run: dotnet restore GateAlert/GateAlert.csproj
+
+      - name: Build
+        run: dotnet build GateAlert/GateAlert.csproj --configuration Release --no-restore
+
+      - name: Store artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: GateAlert
+          path: .\GateAlert\bin\x64\Release\GateAlert\*
+          if-no-files-found: error
+          retention-days: 7
