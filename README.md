@@ -24,6 +24,16 @@ Screenshots are mock-ups illustrating the UI, not captures from the live game.
 | ![Chat line and toast in play](docs/screenshots/04-ingame-chat-toast.png) | **Alerts in chat** (and optional toast) — attendant line, starred GATE ALERT, numbered reminders `2/3`. |
 | ![Recent detections and test footer](docs/screenshots/05-recent-history.png) | **RECENT**, preview **test** button, **Fire a test alert**, `seen` count; Dalamud config/main UI opens the same window. |
 
+### Mock-up video
+
+These clips are mock-ups illustrating the UI, not captures from the live game.
+
+![Mock-up walkthrough preview](docs/videos/mockup-walkthrough.gif)
+
+[Download mock-up walkthrough (MP4)](docs/videos/mockup-walkthrough.mp4)
+
+Regenerate from `docs/videos/src/` (see `docs/videos/README.md`).
+
 ### Feature coverage (every user-facing surface)
 
 | Feature | Shown in |
