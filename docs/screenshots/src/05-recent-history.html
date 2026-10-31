@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="dalamud-mock.css" />
+  <title>05 — Recent history &amp; test actions</title>
+</head>
+<body class="scene-dim">
+  <div style="width:1280px;height:720px;position:relative;">
+    <div class="imwin" style="left:50%;top:50%;transform:translate(-50%,-50%);">
+      <div class="imwin-title">Gate Alert <span class="x">×</span></div>
+      <div class="imwin-body">
+        <div class="row">
+          <span class="gold">GATE ALERT</span>
+          <button class="pill pill-armed">ARMED</button>
+          <span class="muted" style="color:#f5c74a;opacity:0.55;">you are in the saucer</span>
+        </div>
+
+        <div class="sep"></div>
+        <p class="gold" style="margin-bottom:8px;">WHAT LANDS IN CHAT</p>
+        <div class="preview-box">GATE ALERT: ★ Leap of Faith — the Event Square  (go go go!)</div>
+        <div class="row">
+          <input class="input" style="width:150px;" value="Leap of Faith" readonly />
+          <input class="input" style="width:150px;" value="the Event Square" readonly />
+          <button class="btn">test</button>
+        </div>
+
+        <div class="sep"></div>
+        <p class="gold" style="margin-bottom:8px;">RECENT</p>
+        <div class="row" style="margin-bottom:4px;">
+          <span class="gold">14:02:11</span>
+          <span class="gold" style="margin-left:6px;">Leap of Faith</span>
+          <span class="muted">the Event Square</span>
+        </div>
+        <div class="row" style="margin-bottom:4px;">
+          <span class="gold">13:58:40</span>
+          <span class="gold" style="margin-left:6px;">Cliffhanger</span>
+          <span class="muted">the Event Square</span>
+        </div>
+        <div class="row" style="margin-bottom:4px;">
+          <span class="muted">13:55:02</span>
+          <span class="muted" style="margin-left:6px;">The Slice Is Right</span>
+          <span class="muted">(test)</span>
+        </div>
+        <p class="muted" style="font-size:11px;margin-top:6px;">Empty state: “12 announcement(s) seen, none matched your filter”</p>
+
+        <div class="sep"></div>
+        <div class="row">
+          <button class="btn">Save &amp; close</button>
+          <button class="btn">Fire a test alert</button>
+          <span class="muted">/gatealert  •  seen 12</span>
+        </div>
+        <p class="muted" style="font-size:11px;margin-top:8px;">Dalamud plugin config / main UI opens this same window.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
