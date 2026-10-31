@@ -12,6 +12,51 @@ Prints a starred chat line (and optionally a toast) when a watched GATE opens, a
 ★ GATE ALERT  “Cliffhanger” is up — the Event Square  (go go go!)
 ```
 
+## Screenshots
+
+Screenshots are mock-ups illustrating the UI, not captures from the live game.
+
+| | |
+| --- | --- |
+| ![Main window — armed, default settings](docs/screenshots/01-main-window-armed.png) | **Gate Alert window** — `/gatealert`, ARMED pill, saucer presence, Every GATE, OUTPUT defaults, REMINDERS sliders, live chat preview, empty RECENT, Save & close / Fire a test alert. |
+| ![Gate picker and slash commands](docs/screenshots/02-gate-picker-custom.png) | **WHAT TO WATCH** — PAUSED, selective GATE buttons, custom comma list; `/gatealert on`, `off`, `test [name]`, and `/gatetest`. |
+| ![Output, toast, accent, stop nagging](docs/screenshots/03-output-reminders-active.png) | **OUTPUT & REMINDERS** — Flavour text, Also toast, territory guard, accent keys (`gold 60`, `link 500`, numeric), repeat sliders, **stop nagging**. |
+| ![Chat line and toast in play](docs/screenshots/04-ingame-chat-toast.png) | **Alerts in chat** (and optional toast) — attendant line, starred GATE ALERT, numbered reminders `2/3`. |
+| ![Recent detections and test footer](docs/screenshots/05-recent-history.png) | **RECENT**, preview **test** button, **Fire a test alert**, `seen` count; Dalamud config/main UI opens the same window. |
+
+### Feature coverage (every user-facing surface)
+
+| Feature | Shown in |
+| --- | --- |
+| `/gatealert` — open/close window | 01, 05 |
+| `/gatealert on` / `/gatealert off` | 02 |
+| `/gatealert test [name]` | 02 |
+| `/gatetest [name]` | 02 |
+| ARMED / PAUSED master switch (pill) | 01, 02, 03, 05 |
+| `you are in the saucer` / `not in the saucer` | 01, 02, 05 |
+| Armed vs paused status line | 01, 02 |
+| **Every GATE** checkbox | 01 |
+| Built-in GATE toggles (five names) | 01 (all, disabled), 02 (subset) |
+| Custom list (`extra names, comma separated`) | 01 (empty), 02 |
+| **Flavour text** | 01, 03, 04 |
+| **Also toast** | 01 (off), 03–04 (on) |
+| **Only while inside the Gold Saucer** | 01 (on), 03 (off) |
+| Accent palette (`gold 60`, `link 500`, numeric key, preview) | 01, 03 |
+| **REMINDERS** — `times`, `every (s)` sliders | 01, 03 |
+| **stop nagging** | 03 |
+| **WHAT LANDS IN CHAT** live preview | 01, 05 |
+| Preview **test** (name + location fields) | 01, 05 |
+| **RECENT** history (incl. `(test)`) | 01 (empty), 05 |
+| Alternate empty RECENT copy (seen but no match) | 05 (caption) |
+| **Save & close** | 01, 05 |
+| **Fire a test alert** | 01, 05 |
+| Footer `seen` count | 01, 05 |
+| Chat alert + reminder index output | 04 |
+| Screen toast when enabled | 04 |
+| Dalamud **Open Config** / **Open Main UI** → same window | 05 (caption) |
+
+Regenerate mock-ups from `docs/screenshots/src/` (see `docs/screenshots/README.md`).
+
 ## How it works
 
 The attendant announces each GATE in chat:

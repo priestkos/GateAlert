@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="dalamud-mock.css" />
+  <title>01 — Gate Alert main window (armed)</title>
+</head>
+<body class="scene-dim">
+  <div style="width:1280px;height:720px;position:relative;background:#121218;">
+    <p class="hud-label" style="left:50%;transform:translateX(-50%);top:20px;">Mock-up — not from live game</p>
+    <div class="imwin pos-center" style="transform:translate(-50%,-50%);">
+      <div class="imwin-title">Gate Alert <span class="x">×</span></div>
+      <div class="imwin-body">
+        <div class="row">
+          <span class="gold">GATE ALERT</span>
+          <button class="pill pill-armed">ARMED</button>
+          <span class="muted" style="color:#f5c74a;opacity:0.55;">you are in the saucer</span>
+        </div>
+        <p class="muted" style="margin-bottom:4px;">Watching the Gold Saucer Attendant for your GATE.</p>
+
+        <div class="sep"></div>
+        <p class="gold" style="margin-bottom:8px;">WHAT TO WATCH</p>
+        <div class="row">
+          <label class="cb"><span class="cb-box">✓</span> Every GATE</label>
+          <span class="muted">all five, whatever the saucer rolls</span>
+        </div>
+        <div class="row disabled-zone">
+          <button class="gate-btn on">Air Force One</button>
+          <button class="gate-btn on">Any Way the Wind Blows</button>
+          <button class="gate-btn on">Cliffhanger</button>
+          <button class="gate-btn on">Leap of Faith</button>
+          <button class="gate-btn on">The Slice Is Right</button>
+        </div>
+        <input class="input" type="text" placeholder="extra names, comma separated" value="" readonly />
+
+        <div class="sep"></div>
+        <p class="gold" style="margin-bottom:8px;">OUTPUT</p>
+        <div class="row">
+          <label class="cb"><span class="cb-box">✓</span> Flavour text</label>
+          <label class="cb"><span class="cb-box off"></span> Also toast</label>
+        </div>
+        <div class="row">
+          <label class="cb"><span class="cb-box">✓</span> Only while inside the Gold Saucer</label>
+        </div>
+        <p class="muted" style="margin-bottom:6px;">Accent (chat colour palette key)</p>
+        <div class="row">
+          <button class="btn btn-accent">gold 60</button>
+          <button class="btn">link 500</button>
+          <input class="input input-sm" type="text" value="60" readonly />
+          <span class="muted">preview of the accent</span>
+          <span class="gold">★ GATE</span>
+        </div>
+
+        <div class="sep"></div>
+        <p class="gold" style="margin-bottom:8px;">REMINDERS</p>
+        <div class="slider-row">
+          <span class="slider-label">times</span>
+          <div class="slider-track"><div class="slider-fill" style="width:22%;"></div><div class="slider-knob" style="left:22%;"></div></div>
+          <span class="muted">3</span>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label">every (s)</span>
+          <div class="slider-track"><div class="slider-fill" style="width:14%;"></div><div class="slider-knob" style="left:14%;"></div></div>
+          <span class="muted">45</span>
+        </div>
+
+        <div class="sep"></div>
+        <p class="gold" style="margin-bottom:8px;">WHAT LANDS IN CHAT</p>
+        <div class="preview-box">GATE ALERT: ★ Cliffhanger — the Event Square  (go go go!)</div>
+        <div class="row">
+          <input class="input" style="width:150px;" value="Cliffhanger" readonly />
+          <input class="input" style="width:150px;" value="the Event Square" readonly />
+          <button class="btn">test</button>
+        </div>
+
+        <div class="sep"></div>
+        <p class="gold" style="margin-bottom:8px;">RECENT</p>
+        <p class="muted">nothing seen yet — sit in the saucer and wait for the attendant</p>
+
+        <div class="sep"></div>
+        <div class="row">
+          <button class="btn">Save &amp; close</button>
+          <button class="btn">Fire a test alert</button>
+          <span class="muted">/gatealert  •  seen 0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
