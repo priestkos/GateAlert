@@ -1,5 +1,7 @@
 # Gate Alert
 
+<img src="images/icon.png" width="96">
+
 A Dalamud plugin that shouts in your chat log when a GATE you watch opens in the Gold Saucer.
 
 `/gatealert` · Dalamud API 15 · .NET 10
