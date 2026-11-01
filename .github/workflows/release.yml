@@ -112,6 +112,7 @@ jobs:
             echo "SKIP_RELEASE=true" >> $env:GITHUB_ENV
             exit 0
           }
+          $global:LASTEXITCODE = 0
 
           gh api "repos/$env:GITHUB_REPOSITORY/git/ref/tags/$nextTag" 2>$null
           if ($LASTEXITCODE -eq 0) {
@@ -119,8 +120,10 @@ jobs:
             echo "SKIP_RELEASE=true" >> $env:GITHUB_ENV
             exit 0
           }
+          $global:LASTEXITCODE = 0
 
           echo "RELEASE_VERSION=$nextVersionText" >> $env:GITHUB_ENV
+          exit 0
 
       - name: Install the Dalamud development distribution
         if: env.SKIP_RELEASE != 'true'
@@ -130,6 +133,7 @@ jobs:
           New-Item -ItemType Directory -Force -Path $dest | Out-Null
           Invoke-WebRequest -UseBasicParsing -Uri 'https://goatcorp.github.io/dalamud-distrib/latest.zip' -OutFile dalamud.zip
           Expand-Archive -Path dalamud.zip -DestinationPath $dest -Force
+          exit 0
 
       - name: Build GateAlert
         if: env.SKIP_RELEASE != 'true'
@@ -144,6 +148,8 @@ jobs:
             )
           }
           dotnet @buildArgs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          exit 0
 
       - name: Create GitHub Release
         if: env.SKIP_RELEASE != 'true'
@@ -219,5 +225,8 @@ jobs:
             Write-Host "Release $tag already exists; skipping."
             exit 0
           }
+          $global:LASTEXITCODE = 0
 
           gh release create $tag $zip.FullName --title $tag --generate-notes
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          exit 0
