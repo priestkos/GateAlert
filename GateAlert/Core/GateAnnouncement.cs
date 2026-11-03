@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace GateAlert.Core;
 
@@ -56,8 +57,9 @@ public static class GateAnnouncementParser
         var marked = AnnouncementMarkers.Any(m => text.Contains(m, StringComparison.OrdinalIgnoreCase));
 
         var name = ExtractQuotedName(text);
+        // Unquoted custom names only count on an announcement line; otherwise "the" fires on any chatter.
         if (name.Length == 0)
-            name = ExtractKnownGateName(text, extraNames);
+            name = ExtractKnownGateName(text, marked ? extraNames : null);
 
         if (name.Length == 0)
             return false;
@@ -95,7 +97,7 @@ public static class GateAnnouncementParser
 
             // Exact match, or the extracted name contains the custom token (same rule as the matcher).
             if (string.Equals(name, token, StringComparison.OrdinalIgnoreCase)
-                || name.Contains(token, StringComparison.OrdinalIgnoreCase))
+                || ContainsWord(name, token))
                 return true;
         }
 
@@ -136,11 +138,15 @@ public static class GateAnnouncementParser
     private static string ExtractKnownGateName(string text, IReadOnlyCollection<string>? extraNames)
     {
         foreach (var gate in GateCatalog.KnownGates.Concat(CustomSafe(extraNames)))
-            if (gate.Length > 0 && text.Contains(gate, StringComparison.OrdinalIgnoreCase))
+            if (gate.Length > 0 && ContainsWord(text, gate))
                 return gate;
 
         return string.Empty;
     }
+
+    /// <summary>Case-insensitive match of <paramref name="token"/> as whole word(s), so "the" never hits "there".</summary>
+    private static bool ContainsWord(string text, string token) =>
+        Regex.IsMatch(text, $@"(?<!\w){Regex.Escape(token)}(?!\w)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
     private static IEnumerable<string> CustomSafe(IReadOnlyCollection<string>? extraNames) =>
         extraNames?

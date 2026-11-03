@@ -69,6 +69,14 @@ internal static class Program
         Parses(Attendant, "A limited-time event \u201cCliffhanger\u201d is now underway in the Event Square.",
             "Cliffhanger", "the Event Square");
 
+        // Custom tokens match whole words only, and unquoted ones need an announcement line.
+        Rejects(Attendant, "Welcome to the Gold Saucer!", ["the"]);
+        Rejects(Attendant, "Please visit the \u201cPrize Claim\u201d counter when you have a moment.", ["rize"]);
+        Parses(Attendant, "The \u201cBlunderville Sprint\u201d GATE is now open!",
+            "Blunderville Sprint", string.Empty, ["sprint"]);
+        Parses(Attendant, "A limited-time event, Blunderville Sprint, is now underway in the Event Square.",
+            "Blunderville Sprint", "the Event Square", ["Blunderville Sprint"]);
+
         // ---- matching ----
         var cliffhanger = new GateAnnouncement("Cliffhanger", "the Event Square", Attendant, "x");
         var wind = new GateAnnouncement("Any Way the Wind Blows", "the Wonder Square", Attendant, "x");
@@ -116,9 +124,9 @@ internal static class Program
             Fail($"parse \"{Shorten(message)}\" -> got {parsed.GateName} @ \"{parsed.Location}\", wanted {expectedName} @ \"{expectedLocation}\"");
     }
 
-    private static void Rejects(string sender, string message)
+    private static void Rejects(string sender, string message, IReadOnlyCollection<string>? extra = null)
     {
-        if (GateAnnouncementParser.TryParse(sender, message, out var parsed))
+        if (GateAnnouncementParser.TryParse(sender, message, out var parsed, extra))
             Fail($"\"{Shorten(message)}\" from {sender ?? "(null)"} should be ignored, parsed as {parsed.GateName}");
         else
             Pass($"ignored \"{Shorten(message)}\" from {sender ?? "(null)"}");
