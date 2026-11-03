@@ -45,7 +45,7 @@ public sealed class Configuration : IPluginConfiguration
     public void Sanitize()
     {
         RepeatCount = Math.Clamp(RepeatCount, 1, 10);
-        RepeatIntervalSeconds = Math.Clamp(RepeatIntervalSeconds, 5, 600);
+        RepeatIntervalSeconds = Math.Clamp(RepeatIntervalSeconds, 5, 300); // same max as the window slider
         CustomGates ??= string.Empty;
         SelectedGates ??= [];
         SelectedGates = SelectedGates

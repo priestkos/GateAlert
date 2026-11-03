@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Game.Chat;
+using Dalamud.Game.Text;
 using Dalamud.Plugin.Services;
 using GateAlert.Core;
 
@@ -75,6 +76,10 @@ public sealed class GateWatcher : IDisposable
     {
         try
         {
+            // The GATE line is an NpcYell, which the client logs as NPC dialogue (announcements); skip schedule talk etc.
+            if (message.LogKind != XivChatType.NPCDialogueAnnouncements)
+                return;
+
             var sender = message.Sender?.ToString();
             var text = message.Message?.ToString();
 
@@ -128,6 +133,15 @@ public sealed class GateWatcher : IDisposable
 
     private void Fire(GateAnnouncement announcement, bool forced)
     {
+        // A test prints once and leaves the real alert's dedup and reminder state alone.
+        if (forced)
+        {
+            this.announcer.Announce(announcement, this.configuration, 1, 1);
+            this.AddHistory(announcement, forced);
+            this.Changed?.Invoke();
+            return;
+        }
+
         this.LastAnnouncement = announcement;
         this.LastAnnouncementAt = DateTime.UtcNow;
         this.lastShoutName = announcement.GateName;
@@ -136,14 +150,19 @@ public sealed class GateWatcher : IDisposable
         var total = Math.Clamp(this.configuration.RepeatCount, 1, 10);
         this.announcer.Announce(announcement, this.configuration, 1, total);
 
+        this.AddHistory(announcement, forced);
+
+        this.repeatsRemaining = total - 1;
+        this.nextRepeatAt = DateTime.UtcNow.AddSeconds(Math.Clamp(this.configuration.RepeatIntervalSeconds, 5, 300));
+
+        this.Changed?.Invoke();
+    }
+
+    private void AddHistory(GateAnnouncement announcement, bool forced)
+    {
         this.history.Insert(0, new GateHistoryEntry(announcement.GateName, announcement.DisplayLocation, DateTime.UtcNow, forced));
         while (this.history.Count > HistoryLimit)
             this.history.RemoveAt(this.history.Count - 1);
-
-        this.repeatsRemaining = total - 1;
-        this.nextRepeatAt = DateTime.UtcNow.AddSeconds(Math.Clamp(this.configuration.RepeatIntervalSeconds, 5, 600));
-
-        this.Changed?.Invoke();
     }
 
     private void OnFrameworkUpdate(IFramework framework)
@@ -165,7 +184,7 @@ public sealed class GateWatcher : IDisposable
         this.announcer.Announce(announcement, this.configuration, index, total);
 
         this.repeatsRemaining--;
-        this.nextRepeatAt = DateTime.UtcNow.AddSeconds(Math.Clamp(this.configuration.RepeatIntervalSeconds, 5, 600));
+        this.nextRepeatAt = DateTime.UtcNow.AddSeconds(Math.Clamp(this.configuration.RepeatIntervalSeconds, 5, 300));
         this.Changed?.Invoke();
     }
 
