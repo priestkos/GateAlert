@@ -6,6 +6,8 @@ A Dalamud plugin that shouts in your chat log when a GATE you watch opens in the
 
 `/gatealert` · Dalamud API 15 · .NET 10
 
+> **No support will be provided. This software is to be used as is, without warranty of any kind.**
+
 ## What it does
 
 Prints a starred chat line (and optionally a toast) when a watched GATE opens, and repeats it.
