@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gate Alert mock-up walkthrough</title>
+  <link rel="stylesheet" href="../../screenshots/src/dalamud-mock.css" />
+  <style>
+    html, body {
+      width: 1280px;
+      height: 720px;
+      overflow: hidden;
+      margin: 0;
+      position: relative;
+      background: #121218;
+    }
+
+    .scene {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    .beat-label {
+      position: absolute;
+      top: 72px;
+      left: 24px;
+      z-index: 8000;
+      padding: 10px 18px;
+      font-size: 21px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.72);
+      border-left: 4px solid #f5c74a;
+      border-radius: 4px;
+      text-shadow: 0 1px 4px #000;
+      max-width: 560px;
+      line-height: 1.35;
+    }
+
+    .video-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 9000;
+      padding: 14px 20px 16px;
+      font-size: 15px;
+      font-weight: 600;
+      text-align: center;
+      color: #fff;
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.5) 70%, transparent 100%);
+      text-shadow: 0 1px 4px #000;
+    }
+
+    .s1 .imwin { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .s2 .imwin { top: 40px; right: 40px; }
+    .s3 .imwin { left: 80px; top: 60px; }
+    .s4 .chat-log { opacity: 1; }
+    .s5 .imwin { left: 50%; top: 50%; transform: translate(-50%, -50%); }
+
+    .toast-anim {
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .chat-line-hidden {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  </style>
+</head>
+<body>
+  <div class="mockup-banner">Mock-up</div>
+
+  <div id="scene1" class="scene s1 scene-dim">
+    <div class="beat-label">Main window — ARMED</div>
+    <div class="imwin pos-center" style="transform:translate(-50%,-50%);">
+      <div class="imwin-title">Gate Alert <span class="x">×</span></div>
+      <div class="imwin-body">
+        <div class="row">
+          <span class="gold">GATE ALERT</span>
+          <button class="pill pill-armed" id="s1-pill">ARMED</button>
+          <span class="muted" style="color:#f5c74a;opacity:0.55;">you are in the saucer</span>
+        </div>
+        <p class="muted">Watching the Gold Saucer Attendant for your GATE.</p>
+        <div class="sep"></div>
+        <p class="gold">WHAT TO WATCH</p>
+        <div class="row">
+          <label class="cb"><span class="cb-box">✓</span> Every GATE</label>
+          <span class="muted">all five, whatever the saucer rolls</span>
+        </div>
+        <div class="sep"></div>
+        <p class="gold">OUTPUT</p>
+        <div class="row">
+          <label class="cb"><span class="cb-box">✓</span> Flavour text</label>
+          <label class="cb"><span class="cb-box off"></span> Also toast</label>
+        </div>
+        <div class="sep"></div>
+        <p class="gold">WHAT LANDS IN CHAT</p>
+        <div class="preview-box">GATE ALERT: ★ Cliffhanger — the Event Square  (go go go!)</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="scene2" class="scene s2">
+    <div class="scene" style="opacity:1;position:absolute;inset:0;background:linear-gradient(160deg,#1a2838 0%,#2d4a3e 35%,#3d2f1a 70%,#1a1520 100%);"></div>
+    <div class="beat-label">WHAT TO WATCH &amp; commands</div>
+    <div class="imwin pos-tr">
+      <div class="imwin-title">Gate Alert <span class="x">×</span></div>
+      <div class="imwin-body">
+        <div class="row">
+          <span class="gold">GATE ALERT</span>
+          <button class="pill pill-paused">PAUSED</button>
+          <span class="muted">not in the saucer</span>
+        </div>
+        <div class="sep"></div>
+        <p class="gold">WHAT TO WATCH</p>
+        <div class="row">
+          <label class="cb"><span class="cb-box off"></span> Every GATE</label>
+          <span class="muted">2 selected</span>
+        </div>
+        <div class="row">
+          <button class="gate-btn on">Cliffhanger</button>
+          <button class="gate-btn on">Leap of Faith</button>
+        </div>
+        <input class="input" type="text" value="slice, wind" readonly />
+        <p class="muted" style="font-size:11px;margin-top:8px;">
+          <span style="color:#f5c74a;">/gatealert on</span> ·
+          <span style="color:#f5c74a;">/gatealert off</span> ·
+          <span style="color:#f5c74a;">/gatealert test</span> ·
+          <span style="color:#f5c74a;">/gatetest</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div id="scene3" class="scene s3 scene-dim">
+    <div class="beat-label">OUTPUT &amp; REMINDERS</div>
+    <div class="imwin">
+      <div class="imwin-title">Gate Alert <span class="x">×</span></div>
+      <div class="imwin-body">
+        <p class="gold">OUTPUT</p>
+        <div class="row">
+          <label class="cb"><span class="cb-box">✓</span> Flavour text</label>
+          <label class="cb"><span class="cb-box">✓</span> Also toast</label>
+        </div>
+        <div class="row">
+          <button class="btn btn-accent">gold 60</button>
+          <button class="btn">link 500</button>
+          <span class="gold">★ GATE</span>
+        </div>
+        <div class="sep"></div>
+        <p class="gold">REMINDERS</p>
+        <div class="slider-row">
+          <span class="slider-label">times</span>
+          <div class="slider-track"><div class="slider-fill" style="width:33%;"></div><div class="slider-knob" style="left:33%;"></div></div>
+          <span class="muted">4</span>
+          <button class="btn">stop nagging</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="scene4" class="scene s4">
+    <div class="scene" style="opacity:1;position:absolute;inset:0;background:linear-gradient(160deg,#1a2838 0%,#2d4a3e 35%,#3d2f1a 70%,#1a1520 100%);"></div>
+    <div class="beat-label">Chat alert &amp; toast</div>
+    <div class="toast toast-anim" id="s4-toast">GATE ALERT: ★ Cliffhanger — the Event Square  (go go go!)</div>
+    <div class="chat-log">
+      <div class="chat-line chat-npc">Gold Saucer Attendant: A limited-time event “Cliffhanger” is now underway in the Event Square.</div>
+      <div class="chat-line chat-alert">★ <strong>GATE ALERT</strong> “Cliffhanger” is up — the Event Square  <em>(go go go!)</em></div>
+      <div class="chat-line chat-alert chat-line-hidden" id="s4-reminder">★ <strong>GATE ALERT 2/3</strong> “Cliffhanger” is up — the Event Square  <em>(the saucer calls.)</em></div>
+    </div>
+  </div>
+
+  <div id="scene5" class="scene s5 scene-dim">
+    <div class="beat-label">RECENT &amp; test footer</div>
+    <div class="imwin" style="left:50%;top:50%;transform:translate(-50%,-50%);">
+      <div class="imwin-title">Gate Alert <span class="x">×</span></div>
+      <div class="imwin-body">
+        <p class="gold">RECENT</p>
+        <div class="row"><span class="gold">14:02:11</span><span class="gold" style="margin-left:6px;">Leap of Faith</span><span class="muted">the Event Square</span></div>
+        <div class="row"><span class="muted">13:55:02</span><span class="muted" style="margin-left:6px;">The Slice Is Right</span><span class="muted">(test)</span></div>
+        <div class="sep"></div>
+        <div class="row">
+          <button class="btn">Save &amp; close</button>
+          <button class="btn" id="s5-fire">Fire a test alert</button>
+          <span class="muted">/gatealert  •  seen 12</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="video-caption" id="caption">Gate Alert — mock-up walkthrough</div>
+
+  <script>
+    const scenes = [
+      { id: 'scene1', start: 0, end: 3.0, caption: 'Gate Alert window — /gatealert, ARMED, Every GATE, chat preview' },
+      { id: 'scene2', start: 2.6, end: 5.8, caption: 'WHAT TO WATCH — selective GATEs, custom list, slash commands' },
+      { id: 'scene3', start: 5.4, end: 8.2, caption: 'OUTPUT & REMINDERS — toast, accent keys, stop nagging' },
+      { id: 'scene4', start: 7.8, end: 11.0, caption: 'Alerts in chat (and optional toast) — attendant line, reminders 2/3' },
+      { id: 'scene5', start: 10.6, end: 15.0, caption: 'RECENT history, preview test, Fire a test alert, Dalamud config entry' },
+    ];
+
+    function easeOutCubic(x) {
+      return 1 - Math.pow(1 - x, 3);
+    }
+
+    function clamp(v, lo, hi) {
+      return Math.min(hi, Math.max(lo, v));
+    }
+
+    function sceneMotion(t, start, end) {
+      const fade = 0.38;
+      let opacity = 0;
+      let ty = 12;
+      if (t < start) {
+        opacity = 0;
+        ty = 12;
+      } else if (t > end) {
+        opacity = 0;
+        ty = -8;
+      } else if (t < start + fade) {
+        const p = (t - start) / fade;
+        const e = easeOutCubic(p);
+        opacity = e;
+        ty = 12 * (1 - e);
+      } else if (t > end - fade) {
+        const p = (end - t) / fade;
+        const e = easeOutCubic(p);
+        opacity = e;
+        ty = -8 * (1 - e);
+      } else {
+        opacity = 1;
+        ty = 0;
+      }
+      return { opacity, ty };
+    }
+
+    window.seekWalkthrough = function (t) {
+      for (const s of scenes) {
+        const el = document.getElementById(s.id);
+        const { opacity, ty } = sceneMotion(t, s.start, s.end);
+        el.style.opacity = String(opacity);
+        el.style.transform = `translateY(${ty}px)`;
+      }
+
+      let cap = 'Gate Alert — mock-up walkthrough';
+      for (const s of scenes) {
+        if (t >= s.start && t <= s.end) cap = s.caption;
+      }
+      document.getElementById('caption').textContent = cap;
+
+      const s1 = sceneMotion(t, scenes[0].start, scenes[0].end).opacity;
+      const pill = document.getElementById('s1-pill');
+      if (pill) {
+        const pulse = s1 > 0.05 ? 0.65 + 0.35 * Math.sin(t * 8) : 0.65;
+        pill.style.boxShadow = s1 > 0.05 ? `0 0 ${8 + pulse * 6}px rgba(107,219,120,${0.25 + pulse * 0.2})` : '';
+      }
+
+      const s4 = sceneMotion(t, scenes[3].start, scenes[3].end).opacity;
+      const toast = document.getElementById('s4-toast');
+      const reminder = document.getElementById('s4-reminder');
+      if (toast && s4 > 0.05) {
+        const showToast = t >= 8.4 && t <= 10.2;
+        toast.style.opacity = showToast ? '1' : '0.35';
+        toast.style.transform = showToast ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(-8px)';
+      }
+      if (reminder && s4 > 0.05) {
+        const at = 9.6;
+        const p = clamp((t - at) / 0.35, 0, 1);
+        const e = easeOutCubic(p);
+        reminder.style.opacity = String(e);
+        reminder.style.transform = `translateY(${6 * (1 - e)}px)`;
+      }
+
+      const s5 = sceneMotion(t, scenes[4].start, scenes[4].end).opacity;
+      const fire = document.getElementById('s5-fire');
+      if (fire && s5 > 0.05 && t >= 13.2) {
+        fire.style.outline = '2px solid rgba(245,199,74,0.75)';
+        fire.style.outlineOffset = '2px';
+      } else if (fire) {
+        fire.style.outline = '';
+      }
+    };
+
+    seekWalkthrough(0);
+  </script>
+</body>
+</html>
