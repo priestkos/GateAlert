@@ -2,12 +2,53 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+html,
 body {
   font-family: 'Segoe UI', system-ui, sans-serif;
   font-size: 13px;
   color: #d4d4dc;
   background: #0a0a0c;
-  min-height: 100vh;
+}
+
+body.frame-root {
+  width: 1280px;
+  height: 720px;
+  overflow: hidden;
+  margin: 0;
+  position: relative;
+}
+
+.mockup-banner {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 9999;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #1a1200;
+  background: linear-gradient(135deg, #f5c842, #e8a020);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+.scene-label {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  z-index: 9998;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #e8e8ee;
+  background: rgba(0, 0, 0, 0.72);
+  border-left: 4px solid #f5c74a;
+  border-radius: 4px;
+  line-height: 1.35;
 }
 
 .scene {

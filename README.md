@@ -30,7 +30,7 @@ Screenshots are mock-ups illustrating the UI, not captures from the live game.
 
 ### Mock-up video
 
-These clips are mock-ups illustrating the UI, not captures from the live game.
+These clips are mock-ups illustrating the UI, not captures from the live game (~15 s, 1280×720).
 
 ![Mock-up walkthrough preview](docs/videos/mockup-walkthrough.gif)
 
