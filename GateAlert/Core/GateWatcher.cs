@@ -48,11 +48,7 @@ public sealed class GateWatcher : IDisposable
         this.announcer = announcer;
     }
 
-    public event Action? Changed;
-
     public GateAnnouncement? LastAnnouncement { get; private set; }
-
-    public DateTime? LastAnnouncementAt { get; private set; }
 
     public int RepeatsRemaining => this.repeatsRemaining;
 
@@ -60,10 +56,6 @@ public sealed class GateWatcher : IDisposable
 
     /// <summary>Announcements seen and parsed since load, whether or not they were watched.</summary>
     public int SeenCount { get; private set; }
-
-    public DateTime? LastSeenAt { get; private set; }
-
-    public string? LastSeenName { get; private set; }
 
     public bool IsInGoldSaucer => this.clientState.TerritoryType == GateCatalog.GoldSaucerTerritoryId;
 
@@ -92,14 +84,9 @@ public sealed class GateWatcher : IDisposable
                 return;
 
             this.SeenCount++;
-            this.LastSeenAt = DateTime.UtcNow;
-            this.LastSeenName = announcement.GateName;
 
             if (!GateMatcher.ShouldAnnounce(announcement, this.configuration.ToSettings(this.clientState.TerritoryType)))
-            {
-                this.Changed?.Invoke();
                 return;
-            }
 
             // The attendant can repeat a line inside a window; don't double-shout.
             if (string.Equals(announcement.GateName, this.lastShoutName, StringComparison.OrdinalIgnoreCase)
@@ -139,12 +126,10 @@ public sealed class GateWatcher : IDisposable
         {
             this.announcer.Announce(announcement, this.configuration, 1, 1);
             this.AddHistory(announcement, forced);
-            this.Changed?.Invoke();
             return;
         }
 
         this.LastAnnouncement = announcement;
-        this.LastAnnouncementAt = DateTime.UtcNow;
         this.lastShoutName = announcement.GateName;
         this.lastShoutAt = DateTime.UtcNow;
 
@@ -155,8 +140,6 @@ public sealed class GateWatcher : IDisposable
 
         this.repeatsRemaining = total - 1;
         this.nextRepeatAt = DateTime.UtcNow.AddSeconds(Math.Clamp(this.configuration.RepeatIntervalSeconds, 5, 300));
-
-        this.Changed?.Invoke();
     }
 
     private void AddHistory(GateAnnouncement announcement, bool forced)
@@ -176,7 +159,6 @@ public sealed class GateWatcher : IDisposable
             || !GateMatcher.ShouldAnnounce(announcement, this.configuration.ToSettings(this.clientState.TerritoryType)))
         {
             this.repeatsRemaining = 0;
-            this.Changed?.Invoke();
             return;
         }
 
@@ -186,14 +168,9 @@ public sealed class GateWatcher : IDisposable
 
         this.repeatsRemaining--;
         this.nextRepeatAt = DateTime.UtcNow.AddSeconds(Math.Clamp(this.configuration.RepeatIntervalSeconds, 5, 300));
-        this.Changed?.Invoke();
     }
 
-    public void CancelRepeats()
-    {
-        this.repeatsRemaining = 0;
-        this.Changed?.Invoke();
-    }
+    public void CancelRepeats() => this.repeatsRemaining = 0;
 
     public void Dispose()
     {

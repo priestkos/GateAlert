@@ -113,6 +113,5 @@ public sealed class GateAlertPlugin : IDalamudPlugin
         this.commandManager.RemoveHandler(TestCommandName);
         this.commandManager.RemoveHandler(CommandName);
         this.windowSystem.RemoveAllWindows();
-        this.configWindow.Dispose();
     }
 }

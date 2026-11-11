@@ -179,10 +179,7 @@ public readonly record struct GateWatchSettings(
     uint TerritoryType,
     bool AllGates,
     IReadOnlyCollection<string> SelectedGates,
-    string CustomGates)
-{
-    public static GateWatchSettings Disabled => new(false, true, GateCatalog.GoldSaucerTerritoryId, true, [], string.Empty);
-}
+    string CustomGates);
 
 /// <summary>Decides whether an announcement should be shouted about.</summary>
 public static class GateMatcher

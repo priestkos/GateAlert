@@ -11,7 +11,7 @@ namespace GateAlert.Windows;
 /// The plugin's only window: a status board, the GATE picker and a live preview of the
 /// chat line the plugin is about to shout.
 /// </summary>
-public sealed class ConfigWindow : Window, IDisposable
+public sealed class ConfigWindow : Window
 {
     private static readonly Vector4 Gold = new(0.96f, 0.78f, 0.29f, 1f);
     private static readonly Vector4 GoldDim = new(0.96f, 0.78f, 0.29f, 0.55f);
@@ -20,6 +20,7 @@ public sealed class ConfigWindow : Window, IDisposable
     private static readonly Vector4 Muted = new(0.66f, 0.66f, 0.72f, 1f);
     private static readonly Vector4 Panel = new(0.11f, 0.11f, 0.13f, 0.85f);
     private static readonly Vector4 PanelHover = new(0.16f, 0.16f, 0.19f, 0.95f);
+    private static readonly (string Label, ushort Key)[] AccentPresets = [("gold 60", 60), ("link 500", 500)];
 
     private readonly Configuration configuration;
     private readonly GateWatcher watcher;
@@ -38,10 +39,6 @@ public sealed class ConfigWindow : Window, IDisposable
         this.Size = new Vector2(430, 560);
         this.SizeCondition = ImGuiCond.FirstUseEver;
         this.RespectCloseHotkey = false;
-    }
-
-    public void Dispose()
-    {
     }
 
     public override void Draw()
@@ -193,7 +190,7 @@ public sealed class ConfigWindow : Window, IDisposable
         }
 
         ImGui.TextColored(Muted, "Accent (chat colour palette key)");
-        foreach (var (label, key) in new (string, ushort)[] { ("gold 60", 60), ("link 500", 500) })
+        foreach (var (label, key) in AccentPresets)
         {
             var active = this.configuration.AccentColorKey == key;
             ImGui.PushStyleColor(ImGuiCol.Button, active ? new Vector4(Gold.X, Gold.Y, Gold.Z, 0.30f) : Panel);
