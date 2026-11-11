@@ -29,6 +29,7 @@ public sealed class GateWatcher : IDisposable
     private string lastShoutName = string.Empty;
 
     private int repeatsRemaining;
+    private int repeatTotal = 1; // fixed at fire time so a mid-nag RepeatCount change can't print "-4/3"
     private DateTime nextRepeatAt = DateTime.MaxValue;
 
     public GateWatcher(
@@ -147,7 +148,7 @@ public sealed class GateWatcher : IDisposable
         this.lastShoutName = announcement.GateName;
         this.lastShoutAt = DateTime.UtcNow;
 
-        var total = Math.Clamp(this.configuration.RepeatCount, 1, 10);
+        var total = this.repeatTotal = Math.Clamp(this.configuration.RepeatCount, 1, 10);
         this.announcer.Announce(announcement, this.configuration, 1, total);
 
         this.AddHistory(announcement, forced);
@@ -179,7 +180,7 @@ public sealed class GateWatcher : IDisposable
             return;
         }
 
-        var total = Math.Clamp(this.configuration.RepeatCount, 1, 10);
+        var total = this.repeatTotal;
         var index = total - this.repeatsRemaining + 1;
         this.announcer.Announce(announcement, this.configuration, index, total);
 
