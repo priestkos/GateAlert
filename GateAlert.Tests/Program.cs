@@ -104,6 +104,18 @@ internal static class Program
         Check("IsAttendant is exact", GateAnnouncementParser.IsAttendant(Attendant));
         Check("IsAttendant rejects substring spoof", !GateAnnouncementParser.IsAttendant("Not the Gold Saucer Attendant"));
 
+        // ---- gaps: location fallback, whitespace handling, null names ----
+        Check("missing location reads as the Gold Saucer", new GateAnnouncement("Cliffhanger", " ", Attendant, "x").DisplayLocation == "the Gold Saucer");
+        Check("announced location is shown as-is", cliffhanger.DisplayLocation == "the Event Square");
+        Parses(Attendant, "A limited-time event \u201c  Leap   of Faith \u201d is now underway in   the  Event Square!!",
+            "Leap of Faith", "the Event Square");
+        Parses(Attendant, "\u3000A limited-time event \u201cCliffhanger\u201d is now underway in the Event Square.\u3000",
+            "Cliffhanger", "the Event Square");
+        Check("selected entries are trimmed before comparing", GateMatcher.IsWatched("Cliffhanger", false, ["  cliffhanger "], null));
+        Check("blank gate name is never watched, even with every GATE on", !GateMatcher.IsWatched("  ", true, null, null));
+        Check("null selected list and csv are safe", !GateMatcher.IsWatched("Cliffhanger", false, null, null));
+        Check("null announcement says nothing", !GateMatcher.ShouldAnnounce(null, new GateWatchSettings(true, false, inSaucer, true, [], string.Empty)));
+
         Console.WriteLine($"\n{passed} passed, {failed} failed");
         return failed == 0 ? 0 : 1;
     }
