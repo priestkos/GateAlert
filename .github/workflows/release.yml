@@ -34,6 +34,9 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      - name: Run the unit tests
+        run: dotnet run --project GateAlert.Tests/GateAlert.Tests.csproj -c Release
+
       - name: Prepare automatic release
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         shell: pwsh
@@ -174,7 +177,7 @@ jobs:
               [System.IO.Path]::GetFileNameWithoutExtension($_.Name) -eq $pluginAssemblyName
             } | Select-Object -First 1
             if (-not $dllEntry) {
-              $dllEntry = $dllEntries | Select-Object -First 1
+              throw "$pluginAssemblyName.dll not found inside latest.zip"
             }
             $manifestName = [System.IO.Path]::ChangeExtension($dllEntry.Name, '.json')
             $manifestEntry = $archive.Entries | Where-Object { $_.Name -eq $manifestName }
