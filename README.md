@@ -13,7 +13,7 @@ A Dalamud plugin that shouts in your chat log when a GATE you watch opens in the
 Prints a starred chat line (and optionally a toast) when a watched GATE opens, and repeats it.
 
 ```
-★ GATE ALERT  “Cliffhanger” is up — the Event Square  (go go go!)
+[GATE] ★ GATE ALERT 1/3 “Cliffhanger” is up — the Event Square  (go go go!)
 ```
 
 ## Screenshots
